@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
        ===================================================== */
 
     const CONFIG = {
-        adminEmail: "example@santa2026.com",
+        adminEmail: "bookingsantamagic@gmail.com",
 
         paymentAccounts: {
             PayPal: "your-paypal-account@example.com",
@@ -617,82 +617,90 @@ const customer = {
        ===================================================== */
 
     function openPaymentDetails(method) {
-        selectedPaymentMethod = method;
+    selectedPaymentMethod = method;
 
-        const account = CONFIG.paymentAccounts[method];
+    const selectedLogo = getElement(
+        "#selectedPaymentLogo",
+        ".selected-payment-logo"
+    );
 
-        if (!account || account.startsWith("your-") ||
-            account.startsWith("Your ")) {
-            showToast(
-                `Please configure your ${method} account in script.js first.`,
-                "error"
-            );
-        }
+    const accountInformation = getElement(
+        "#paymentAccountInformation",
+        ".payment-account-information"
+    );
 
-        const selectedLogo = getElement(
-            "#selectedPaymentLogo",
-            ".selected-payment-logo"
-        );
+    const bookingReference = currentBooking?.reference || "Not available";
 
-        const accountInformation = getElement(
-            "#paymentAccountInformation",
-            ".payment-account-information"
-        );
+    const payment = paymentMethods.find(item => item.name === method);
 
-        const bookingReference = currentBooking?.reference || "Not available";
-
-        if (selectedLogo) {
-            const payment = paymentMethods.find(item => item.name === method);
-
-            selectedLogo.innerHTML = `
-                <img src="${payment?.logo || ""}"
-                     alt="${escapeHTML(method)}"
-                     onerror="this.style.display='none'">
-                <h3>${escapeHTML(method)}</h3>
-            `;
-        }
-
-        if (accountInformation) {
-            accountInformation.innerHTML = `
-                <div class="account-detail">
-                    <span>Payment account</span>
-                    <strong>${escapeHTML(account)}</strong>
-                </div>
-
-                <div class="account-detail">
-                    <span>Booking reference</span>
-                    <strong>${escapeHTML(bookingReference)}</strong>
-                </div>
-
-                <div class="account-detail">
-                    <span>Amount to pay</span>
-                    <strong>${formatMoney(currentBooking?.total || 0)}</strong>
-                </div>
-
-                <p class="payment-notice">
-                    Send the exact amount to the account shown above.
-                    Include your booking reference where supported.
-                    Keep your payment confirmation for your records.
-                </p>
-            `;
-        }
-
-        paymentModal?.classList.remove("active");
-        paymentDetailsModal?.classList.add("active");
+    if (selectedLogo) {
+        selectedLogo.innerHTML = `
+            <img src="${payment?.logo || ""}"
+                 alt="${escapeHTML(method)}"
+                 onerror="this.style.display='none'">
+            <h3>${escapeHTML(method)}</h3>
+        `;
     }
 
-    paymentMethodsContainer?.addEventListener("click", event => {
-        const button = event.target.closest("[data-payment-method]");
+    if (accountInformation) {
+        const subject = encodeURIComponent(
+            "Santa's Magic - Manual Payment Information"
+        );
 
-        if (!button) return;
+        const body = encodeURIComponent(
+            `Hello Santa's Magic,
 
-        openPaymentDetails(button.dataset.paymentMethod);
-    });
+I would like to request your available manual payment details.
 
-    const paymentDoneButton = getElement(
-        "#paymentDoneButton",
-        ".payment-done-button"
-    );
+Booking Reference: ${bookingReference}
+Selected Payment Method: ${method}
+Amount: ${formatMoney(currentBooking?.total || 0)}
+
+Please send me the payment instructions.
+
+Thank you.`
+        );
+
+        accountInformation.innerHTML = `
+            <div class="manual-payment-notice">
+                <h3>Manual Payments Currently Available</h3>
+
+                <p>
+                    We currently accept manual payments.
+                    To request our available payment methods
+                    and receive payment instructions, please
+                    contact us by email.
+                </p>
+
+                <p>
+                    Please include your booking reference
+                    so we can assist you promptly.
+                </p>
+
+                <a
+                    href="mailto:bookingsantamagic@gmail.com?subject=${subject}&body=${body}"
+                    class="payment-email-button"
+                >
+                    <i class="fas fa-envelope"></i>
+                    Request Payment Details
+                </a>
+
+                <p class="booking-reference">
+                    Booking Reference:
+                    <strong>${escapeHTML(bookingReference)}</strong>
+                </p>
+            </div>
+        `;
+    }
+
+    paymentModal?.classList.remove("active");
+    paymentDetailsModal?.classList.add("active");
+
+    // Hide the old payment confirmation button.
+    if (paymentDoneButton) {
+        paymentDoneButton.style.display = "none";
+    }
+}
 
     /* =====================================================
        SIMULATED PAYMENT PROCESSING
