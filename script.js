@@ -12,17 +12,22 @@ document.addEventListener("DOMContentLoaded", () => {
        ===================================================== */
 
     const CONFIG = {
-        adminEmail: "bookingsantamagic@gmail.com",
+    adminEmail: "bookingsantamagic@gmail.com",
 
-        paymentAccounts: {
-            PayPal: "your-paypal-account@example.com",
-            Venmo: "@YourVenmoUsername",
-            "Cash App": "$YourCashTag",
-            Zelle: "your-payment-email@example.com",
-            "Apple Pay": "Your Apple Pay number",
-            "Google Pay": "your-payment-email@example.com"
-        }
-    };
+    paymentAccounts: {
+        PayPal: "Manual payments currently available. Email bookingsantamagic@gmail.com to request payment details. Include your booking reference.",
+
+        Venmo: "Manual payments currently available. Email bookingsantamagic@gmail.com for payment instructions. Include your booking reference.",
+
+        "Cash App": "Manual payments currently available. Contact bookingsantamagic@gmail.com for payment details. Include your booking reference.",
+
+        Zelle: "Manual payments currently available. Email bookingsantamagic@gmail.com for payment instructions. Include your booking reference.",
+
+        "Apple Pay": "Manual payment arrangements are available. Email bookingsantamagic@gmail.com for details. Include your booking reference.",
+
+        "Google Pay": "Manual payment arrangements are available. Email bookingsantamagic@gmail.com for details. Include your booking reference."
+    }
+};
 
     /* =====================================================
        HELPERS
